@@ -1,0 +1,113 @@
+{
+  "version": "1.0",
+  "meta": {
+    "project": "ModernGothicRPG",
+    "description": "Crafting recipes for Ashbourne vertical slice. Recipes include station, materials, time, success chance, and outputs."
+  },
+  "stations": [
+    "Forge",
+    "AlchemyTable",
+    "RitualCircle",
+    "TechBench",
+    "Garage"
+  ],
+  "recipes": [
+    {
+      "id": "health_tonic_minor",
+      "name": "Minor Health Tonic",
+      "station": "AlchemyTable",
+      "craft_time_sec": 10,
+      "materials": [
+        { "item_id": "HERB_A", "count": 2 },
+        { "item_id": "COIN_SMALL", "count": 5 }
+      ],
+      "skill_required": { "skill_id": "crafting", "min_level": 1 },
+      "success_base": 0.98,
+      "output": { "item_id": "POTION_MINOR_HEAL", "count": 1 },
+      "failure_behavior": { "consume_materials": true, "partial_return": { "item_id": "COIN_SMALL", "count": 2 } }
+    },
+    {
+      "id": "health_tonic_standard",
+      "name": "Standard Health Tonic",
+      "station": "AlchemyTable",
+      "craft_time_sec": 25,
+      "materials": [
+        { "item_id": "HERB_A", "count": 4 },
+        { "item_id": "HERB_B", "count": 1 },
+        { "item_id": "MAT_SPIRIT_ASH", "count": 1 }
+      ],
+      "skill_required": { "skill_id": "crafting", "min_level": 10 },
+      "success_base": 0.85,
+      "output": { "item_id": "POTION_HEAL", "count": 1 },
+      "failure_behavior": { "consume_materials": true, "partial_return": { "item_id": "HERB_A", "count": 1 } }
+    },
+    {
+      "id": "ritual_sigiled_bind",
+      "name": "Sigiled Bind (Ritual Component)",
+      "station": "RitualCircle",
+      "craft_time_sec": 60,
+      "materials": [
+        { "item_id": "MAT_SPIRIT_ASH", "count": 3 },
+        { "item_id": "ENCHANTED_CANDLE", "count": 2 },
+        { "item_id": "RITUAL_SIGIL", "count": 1 }
+      ],
+      "skill_required": { "skill_id": "ritualcraft", "min_level": 25 },
+      "success_base": 0.7,
+      "output": { "item_id": "SIGILED_BIND", "count": 1 },
+      "failure_behavior": { "consume_materials": true, "partial_return": null }
+    },
+    {
+      "id": "warden_plate_repair",
+      "name": "Warden Plate Repair",
+      "station": "Forge",
+      "craft_time_sec": 45,
+      "materials": [
+        { "item_id": "WARDEN_PLATE", "count": 1 },
+        { "item_id": "MAT_WOOD", "count": 2 },
+        { "item_id": "COIN_SMALL", "count": 20 }
+      ],
+      "skill_required": { "skill_id": "forge", "min_level": 15 },
+      "success_base": 0.9,
+      "output": { "item_id": "WARDEN_PLATE_REPAIRED", "count": 1 },
+      "failure_behavior": { "consume_materials": true, "partial_return": { "item_id": "COIN_SMALL", "count": 5 } }
+    },
+    {
+      "id": "repair_drone_kit",
+      "name": "Repair Drone Kit",
+      "station": "TechBench",
+      "craft_time_sec": 90,
+      "materials": [
+        { "item_id": "TECH_CORE", "count": 1 },
+        { "item_id": "MAT_WOOD", "count": 3 },
+        { "item_id": "COIN_MEDIUM", "count": 50 }
+      ],
+      "skill_required": { "skill_id": "tech", "min_level": 20 },
+      "success_base": 0.75,
+      "output": { "item_id": "REPAIR_DRONE", "count": 1 },
+      "failure_behavior": { "consume_materials": true, "partial_return": { "item_id": "TECH_CORE", "count": 0 } }
+    },
+    {
+      "id": "bind_spirit_minor",
+      "name": "Minor Spirit Bind",
+      "station": "RitualCircle",
+      "craft_time_sec": 120,
+      "materials": [
+        { "item_id": "SIGILED_BIND", "count": 1 },
+        { "item_id": "MAT_SPIRIT_ASH", "count": 2 },
+        { "item_id": "RITUAL_SIGIL", "count": 1 }
+      ],
+      "skill_required": { "skill_id": "ritualcraft", "min_level": 30 },
+      "success_base": 0.6,
+      "output": { "item_id": "BOUND_SPIRIT_FRAGMENT", "count": 1 },
+      "failure_behavior": { "consume_materials": true, "partial_return": null }
+    }
+  ],
+  "global_rules": {
+    "failure_material_consumption": "partial_or_full",
+    "skill_influence": {
+      "type": "linear",
+      "effect_on_success": { "per_level_bonus": 0.005 }
+    },
+    "dual_station_recipes": []
+  }
+}
