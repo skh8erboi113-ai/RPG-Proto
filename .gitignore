@@ -1,0 +1,78 @@
+# Build artifacts
+/build/
+/build_*/
+/bin/
+/out/
+/dist/
+/CMakeFiles/
+/CMakeCache.txt
+/*.cmake
+/*.make
+
+# IDE and editor
+.vscode/
+.idea/
+*.suo
+*.user
+*.userprefs
+*.sln
+*.xcodeproj
+*.xcworkspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Compiled objects and libraries
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.exe
+*.lib
+*.a
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+
+# Logs and temporary
+*.log
+*.tmp
+*.temp
+
+# Assets and large files
+/assets/imported/
+/vertical_slice/vertical_slice_package/
+/*.zip
+/*.tar.gz
+
+# Git LFS pointer files (if using Git LFS)
+*.psd
+*.fbx
+*.wav
+*.ogg
+*.mp3
+*.png
+*.jpg
+*.jpeg
+*.tga
+*.exr
+
+# Node / npm
+node_modules/
+
+# Test output
+/test_output/
+coverage/
+
+# Secrets
+*.key
+*.pem
+*.p12
+.env
