@@ -1,0 +1,124 @@
+{
+  "version": "1.0",
+  "meta": {
+    "project": "ModernGothicRPG",
+    "description": "Master skill trees for the vertical slice and core systems. Levels 1-99; milestones at 10,25,50,75,99."
+  },
+  "trees": [
+    {
+      "id": "angelic",
+      "name": "Angelic",
+      "description": "Light, protection, healing and binding abilities tied to angelic alignment.",
+      "tiers": [
+        {
+          "tier": 1,
+          "unlock_level": 1,
+          "skills": [
+            { "id": "angelic_aura", "name": "Angelic Aura", "type": "passive", "max_level": 5, "base_value": 2, "scaling": 1.05 },
+            { "id": "minor_bless", "name": "Minor Bless", "type": "active", "max_level": 5, "cooldown_sec": 20, "effect_base": 10, "scaling": 1.08 }
+          ]
+        },
+        {
+          "tier": 2,
+          "unlock_level": 10,
+          "skills": [
+            { "id": "shield_of_light", "name": "Shield of Light", "type": "active", "max_level": 10, "cooldown_sec": 30, "effect_base": 25, "scaling": 1.06 }
+          ]
+        },
+        {
+          "tier": 3,
+          "unlock_level": 25,
+          "skills": [
+            { "id": "divine_exorcism", "name": "Divine Exorcism", "type": "ritual", "max_level": 5, "materials_required": ["MAT_SPIRIT_ASH","HERB_A"], "success_base": 0.6, "scaling": 1.04 }
+          ]
+        },
+        {
+          "tier": 4,
+          "unlock_level": 50,
+          "skills": [
+            { "id": "seraphic_burst", "name": "Seraphic Burst", "type": "active", "max_level": 5, "cooldown_sec": 60, "effect_base": 120, "scaling": 1.07 }
+          ]
+        },
+        {
+          "tier": 5,
+          "unlock_level": 75,
+          "skills": [
+            { "id": "angelic_ascendancy", "name": "Angelic Ascendancy", "type": "ultimate", "max_level": 1, "cooldown_sec": 600, "effect_base": 0, "scaling": 1.0 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "demonic",
+      "name": "Demonic",
+      "description": "Dark power, curses, life‑steal and aggressive rituals tied to demonic alignment.",
+      "tiers": [
+        {
+          "tier": 1,
+          "unlock_level": 1,
+          "skills": [
+            { "id": "blood_tithe", "name": "Blood Tithe", "type": "passive", "max_level": 5, "base_value": 1, "scaling": 1.06 },
+            { "id": "shadow_strike", "name": "Shadow Strike", "type": "active", "max_level": 5, "cooldown_sec": 12, "effect_base": 18, "scaling": 1.09 }
+          ]
+        },
+        {
+          "tier": 2,
+          "unlock_level": 10,
+          "skills": [
+            { "id": "curse_of_weakness", "name": "Curse of Weakness", "type": "active", "max_level": 10, "cooldown_sec": 40, "effect_base": 15, "scaling": 1.05 }
+          ]
+        },
+        {
+          "tier": 3,
+          "unlock_level": 25,
+          "skills": [
+            { "id": "bind_soul", "name": "Bind Soul", "type": "ritual", "max_level": 5, "materials_required": ["MAT_SPIRIT_ASH","RITUAL_SIGIL"], "success_base": 0.55, "scaling": 1.03 }
+          ]
+        },
+        {
+          "tier": 4,
+          "unlock_level": 50,
+          "skills": [
+            { "id": "hellfire_wave", "name": "Hellfire Wave", "type": "active", "max_level": 5, "cooldown_sec": 50, "effect_base": 140, "scaling": 1.06 }
+          ]
+        },
+        {
+          "tier": 5,
+          "unlock_level": 75,
+          "skills": [
+            { "id": "demonic_overlord", "name": "Demonic Overlord", "type": "ultimate", "max_level": 1, "cooldown_sec": 600, "effect_base": 0, "scaling": 1.0 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tech",
+      "name": "Tech",
+      "description": "Gadgets, drones, and augmentations; scales with Tech skill and components.",
+      "tiers": [
+        {
+          "tier": 1,
+          "unlock_level": 1,
+          "skills": [
+            { "id": "repair_drone", "name": "Repair Drone", "type": "active", "max_level": 5, "cooldown_sec": 45, "effect_base": 20, "scaling": 1.05 },
+            { "id": "overclock", "name": "Overclock", "type": "passive", "max_level": 5, "base_value": 2, "scaling": 1.04 }
+          ]
+        },
+        {
+          "tier": 2,
+          "unlock_level": 10,
+          "skills": [
+            { "id": "emp_burst", "name": "EMP Burst", "type": "active", "max_level": 10, "cooldown_sec": 60, "effect_base": 0, "scaling": 1.05 }
+          ]
+        },
+        {
+          "tier": 3,
+          "unlock_level": 25,
+          "skills": [
+            { "id": "deploy_turret", "name": "Deploy Turret", "type": "active", "max_level": 5, "cooldown_sec": 90, "effect_base": 40, "scaling": 1.06 }
+          ]
+        }
+      ]
+    }
+  ]
+}
