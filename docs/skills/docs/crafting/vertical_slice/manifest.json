@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "name": "Ashbourne Vertical Slice",
+  "description": "Manifest describing the vertical slice package, assets, scripts, and build entry points.",
+  "entry": {
+    "build_script": "vertical_slice/build_vertical_slice.sh",
+    "export_script": "vertical_slice/export_placeholder_assets.sh",
+    "manifest_version": 1
+  },
+  "assets": [
+    { "id": "placeholder_character", "path": "vertical_slice/assets/placeholder_character.fbx", "type": "model", "notes": "Placeholder humanoid" },
+    { "id": "placeholder_env_block", "path": "vertical_slice/assets/placeholder_env_block.fbx", "type": "model", "notes": "Modular environment block" },
+    { "id": "placeholder_horse", "path": "vertical_slice/assets/placeholder_horse.fbx", "type": "model", "notes": "Mount placeholder" },
+    { "id": "placeholder_textures", "path": "vertical_slice/assets/placeholder_textures/", "type": "textures", "notes": "PNG textures for placeholders" }
+  ],
+  "scripts": {
+    "import": "vertical_slice/scripts/import_assets.py",
+    "generate_metadata": "vertical_slice/scripts/generate_asset_metadata.py",
+    "build": "vertical_slice/build_vertical_slice.sh"
+  },
+  "package": {
+    "output_dir": "vertical_slice/vertical_slice_package",
+    "include": [
+      "vertical_slice/manifest.json",
+      "vertical_slice/assets/",
+      "vertical_slice/scripts/",
+      "docs/vertical_slice/"
+    ]
+  },
+  "notes": "Add real assets locally before running build. Placeholder assets can be empty files for CI to validate structure."
+}
