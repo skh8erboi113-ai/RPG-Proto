@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "Renderer.h"
+#include "Camera.h"
 
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -9,7 +10,8 @@ namespace engine {
 Engine::Engine()
   : initialized_(false),
     name_("ModernGothicEngine"),
-    window_(nullptr) {}
+    window_(nullptr),
+    timeSeconds_(0.0f) {}
 
 Engine::~Engine() {
   if (initialized_) {
@@ -31,6 +33,8 @@ bool Engine::Initialize() {
     return false;
   }
 
+  camera_ = std::make_unique<Camera>();
+
   renderer_ = std::make_unique<Renderer>();
   if (!renderer_->Initialize(window_, 1280, 720)) {
     std::cerr << "[engine] Failed to initialize renderer\n";
@@ -46,7 +50,6 @@ bool Engine::Initialize() {
 
 void Engine::Tick(float dt) {
   if (!initialized_) return;
-  (void)dt;
 
   if (glfwWindowShouldClose(window_)) {
     Shutdown();
@@ -54,13 +57,16 @@ void Engine::Tick(float dt) {
   }
 
   glfwPollEvents();
-  renderer_->RenderFrame();
+
+  timeSeconds_ += dt;
+  renderer_->RenderFrame(timeSeconds_);
 }
 
 void Engine::Shutdown() {
   if (!initialized_) return;
 
   renderer_.reset();
+  camera_.reset();
 
   if (window_) {
     glfwDestroyWindow(window_);
