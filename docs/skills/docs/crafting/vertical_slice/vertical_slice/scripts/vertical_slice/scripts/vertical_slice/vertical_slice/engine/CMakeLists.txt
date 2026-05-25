@@ -3,11 +3,18 @@ project(engine)
 
 add_library(engine STATIC
   src/Engine.cpp
+  src/Renderer.cpp
 )
 
 target_include_directories(engine PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_link_libraries(engine PUBLIC
+  bgfx
+  bx
+  bimg
+  glfw
 )
 
 target_compile_features(engine PUBLIC cxx_std_17)
