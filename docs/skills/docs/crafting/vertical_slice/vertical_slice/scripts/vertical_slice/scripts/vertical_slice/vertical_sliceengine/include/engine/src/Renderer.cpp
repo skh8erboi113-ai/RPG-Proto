@@ -1,10 +1,12 @@
 #include "Renderer.h"
 #include "Camera.h"
+#include "ShaderUtils.h"
 
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 #include <bx/math.h>
 #include <GLFW/glfw3.h>
+#include <iostream>
 
 namespace {
 
@@ -32,11 +34,6 @@ static const uint16_t s_cubeIndices[] = {
   0, 4, 1, 4, 5, 1,
   2, 3, 6, 6, 3, 7,
 };
-
-bgfx::ShaderHandle loadShader(const char* /*name*/) {
-  // Placeholder: in a real project, load compiled shaders from files.
-  return BGFX_INVALID_HANDLE;
-}
 
 } // namespace
 
@@ -70,6 +67,7 @@ bool Renderer::Initialize(GLFWwindow* window, uint32_t width, uint32_t height) {
 #endif
 
   if (!bgfx::init(init)) {
+    std::cerr << "[Renderer] bgfx init failed\n";
     return false;
   }
 
@@ -85,8 +83,10 @@ bool Renderer::Initialize(GLFWwindow* window, uint32_t width, uint32_t height) {
     return false;
   }
 
-  // For now, we skip real shaders and rely on fixed pipeline emulation where possible.
-  program_ = BGFX_INVALID_HANDLE;
+  if (!CreateShaderProgram()) {
+    std::cerr << "[Renderer] Failed to create shader program\n";
+    // We still can run with fixed pipeline on some backends, but better to have shaders.
+  }
 
   initialized_ = true;
   return true;
@@ -101,6 +101,12 @@ bool Renderer::CreateCube() {
     bgfx::makeRef(s_cubeIndices, sizeof(s_cubeIndices))
   );
   return bgfx::isValid(vbh_) && bgfx::isValid(ibh_);
+}
+
+bool Renderer::CreateShaderProgram() {
+  // Adjust paths to wherever you store compiled shaders
+  program_ = LoadProgram("shaders/vs_basic.bin", "shaders/fs_basic.bin");
+  return bgfx::isValid(program_);
 }
 
 void Renderer::Resize(uint32_t width, uint32_t height) {
@@ -120,10 +126,13 @@ void Renderer::RenderFrame(float timeSeconds) {
   bgfx::setTransform(mtx);
   bgfx::setVertexBuffer(0, vbh_);
   bgfx::setIndexBuffer(ibh_);
-
   bgfx::setState(BGFX_STATE_DEFAULT);
 
-  bgfx::submit(0, program_);
+  if (bgfx::isValid(program_)) {
+    bgfx::submit(0, program_);
+  } else {
+    bgfx::submit(0);
+  }
 
   bgfx::frame();
 }
