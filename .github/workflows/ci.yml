@@ -22,9 +22,9 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y cmake ninja-build g++ xorg-dev libglu1-mesa-dev
 
-    - name: Install bgfx dependencies
+    - name: Clone bgfx.cmake
       run: |
-        sudo apt-get install -y libbx-dev libbimg-dev libbgfx-dev
+        git clone --depth 1 https://github.com/bkaradzic/bgfx.cmake.git external/bgfx
 
     - name: Configure
       run: |
