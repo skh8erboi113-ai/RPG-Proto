@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.16)
-
 add_library(engine
     src/Camera.cpp
     src/Mesh.cpp
@@ -8,3 +6,6 @@ add_library(engine
 )
 
 target_include_directories(engine PUBLIC include)
+
+# Link bgfx (this also links bx + bimg automatically)
+target_link_libraries(engine PUBLIC bgfx)
