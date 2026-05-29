@@ -1,4 +1,0 @@
-- name: Clone bgfx.cmake
-  run: |
-    rm -rf external/bgfx
-    git clone --depth 1 https://github.com/bkaradzic/bgfx.cmake.git external/bgfx
