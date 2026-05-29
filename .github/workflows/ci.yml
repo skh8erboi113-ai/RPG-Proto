@@ -10,10 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-- name: Install bgfx dependencies
-  run: |
-    sudo apt-get install -y libbx-dev libbimg-dev libbgfx-dev
-    
+
     steps:
     - name: Checkout repo
       uses: actions/checkout@v4
@@ -24,6 +21,10 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y cmake ninja-build g++ xorg-dev libglu1-mesa-dev
+
+    - name: Install bgfx dependencies
+      run: |
+        sudo apt-get install -y libbx-dev libbimg-dev libbgfx-dev
 
     - name: Configure
       run: |
