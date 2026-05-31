@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include <bx/math.h>
+#include <bgfx/bgfx.h>
 
 namespace engine {
 

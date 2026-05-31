@@ -1,5 +1,4 @@
 #include "ShaderUtils.h"
-
 #include <bx/file.h>
 #include <bx/allocator.h>
 #include <iostream>
@@ -10,14 +9,15 @@ bx::DefaultAllocator s_allocator;
 
 const bgfx::Memory* loadFileToMemory(const std::string& path) {
   bx::FileReader reader;
-  if (!bx::open(&reader, path.c_str())) {
-    std::cerr << "[Shader] Failed to open: " << path << "\n";
+  bx::Error err;
+  if (!bx::open(&reader, path.c_str(), &err)) {
+    std::cerr << "[Shader] Failed to open: " << path << " error: " << err.getMessage().getCPtr() << "\n";
     return nullptr;
   }
 
-  uint32_t size = (uint32_t)bx::getSize(&reader);
-  const bgfx::Memory* mem = bgfx::alloc(size + 1);
-  bx::read(&reader, mem->data, size);
+  int64_t size = bx::getSize(&reader);
+  const bgfx::Memory* mem = bgfx::alloc((uint32_t)size + 1);
+  bx::read(&reader, mem->data, (int32_t)size, &err);
   bx::close(&reader);
   mem->data[size] = '\0';
   return mem;
@@ -25,9 +25,7 @@ const bgfx::Memory* loadFileToMemory(const std::string& path) {
 
 } // namespace
 
-namespace engine {
-
-bgfx::ShaderHandle LoadShader(const std::string& path) {
+bgfx::ShaderHandle ShaderUtils::loadShader(const std::string& path) {
   const bgfx::Memory* mem = loadFileToMemory(path);
   if (!mem) {
     return BGFX_INVALID_HANDLE;
@@ -35,9 +33,9 @@ bgfx::ShaderHandle LoadShader(const std::string& path) {
   return bgfx::createShader(mem);
 }
 
-bgfx::ProgramHandle LoadProgram(const std::string& vsPath, const std::string& fsPath) {
-  bgfx::ShaderHandle vsh = LoadShader(vsPath);
-  bgfx::ShaderHandle fsh = LoadShader(fsPath);
+bgfx::ProgramHandle ShaderUtils::loadProgram(const std::string& vsPath, const std::string& fsPath) {
+  bgfx::ShaderHandle vsh = loadShader(vsPath);
+  bgfx::ShaderHandle fsh = loadShader(fsPath);
   if (!bgfx::isValid(vsh) || !bgfx::isValid(fsh)) {
     std::cerr << "[Shader] Failed to load shaders: " << vsPath << " / " << fsPath << "\n";
     if (bgfx::isValid(vsh)) bgfx::destroy(vsh);
@@ -47,5 +45,3 @@ bgfx::ProgramHandle LoadProgram(const std::string& vsPath, const std::string& fs
   bgfx::ProgramHandle prog = bgfx::createProgram(vsh, fsh, true);
   return prog;
 }
-
-} // namespace engine
