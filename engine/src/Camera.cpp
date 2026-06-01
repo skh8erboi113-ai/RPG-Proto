@@ -1,5 +1,7 @@
 #include "Camera.h"
 #include <bx/math.h>
+#include <bgfx/bgfx.h>
+#include <cmath>
 
 namespace engine {
 
@@ -22,6 +24,14 @@ void Camera::SetPosition(float x, float y, float z) {
 void Camera::LookAt(float targetX, float targetY, float targetZ) {
   target_[0] = targetX; target_[1] = targetY; target_[2] = targetZ;
   bx::mtxLookAt(view_, bx::Vec3{pos_[0], pos_[1], pos_[2]}, bx::Vec3{target_[0], target_[1], target_[2]});
+}
+
+void Camera::UpdateDynamic(float time) {
+    // Simple orbital movement for demonstration
+    float radius = 5.0f;
+    float x = std::sin(time) * radius;
+    float z = std::cos(time) * radius;
+    SetPosition(x, 2.0f, z);
 }
 
 } // namespace engine

@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include "Renderer.h"
 #include "Camera.h"
+#include "WorldStreamer.h"
 
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -34,8 +35,10 @@ bool Engine::Initialize() {
   }
 
   camera_ = std::make_unique<Camera>();
+  worldStreamer_ = std::make_unique<WorldStreamer>();
 
   renderer_ = std::make_unique<Renderer>();
+  renderer_->SetCamera(camera_.get());
   if (!renderer_->Initialize(window_, 1280, 720)) {
     std::cerr << "[engine] Failed to initialize renderer\n";
     glfwDestroyWindow(window_);
@@ -52,13 +55,18 @@ void Engine::Tick(float dt) {
   if (!initialized_) return;
 
   if (glfwWindowShouldClose(window_)) {
-    Shutdown();
+    initialized_ = false;
     return;
   }
 
   glfwPollEvents();
 
   timeSeconds_ += dt;
+
+  // Update camera and world streamer
+  camera_->UpdateDynamic(timeSeconds_);
+  worldStreamer_->Update(dt);
+
   renderer_->RenderFrame(timeSeconds_);
 }
 
@@ -67,6 +75,7 @@ void Engine::Shutdown() {
 
   renderer_.reset();
   camera_.reset();
+  worldStreamer_.reset();
 
   if (window_) {
     glfwDestroyWindow(window_);

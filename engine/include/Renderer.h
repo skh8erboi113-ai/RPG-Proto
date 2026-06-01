@@ -15,6 +15,7 @@ public:
   ~Renderer();
 
   bool Initialize(GLFWwindow* window, uint32_t width, uint32_t height);
+  void SetCamera(Camera* camera) { camera_ = camera; }
   void Resize(uint32_t width, uint32_t height);
   void RenderFrame(float timeSeconds);
   void Shutdown();

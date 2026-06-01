@@ -12,6 +12,8 @@ public:
   void SetPosition(float x, float y, float z);
   void LookAt(float targetX, float targetY, float targetZ);
 
+  void UpdateDynamic(float time);
+
   const float* GetViewMatrix() const { return view_; }
   const float* GetProjMatrix() const { return proj_; }
 

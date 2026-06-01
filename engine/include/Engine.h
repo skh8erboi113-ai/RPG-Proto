@@ -9,6 +9,7 @@ namespace engine {
 
 class Renderer;
 class Camera;
+class WorldStreamer;
 
 class Engine {
 public:
@@ -20,6 +21,7 @@ public:
   void Shutdown();
 
   std::string GetName() const;
+  bool IsRunning() const { return initialized_; }
 
 private:
   bool initialized_;
@@ -28,6 +30,7 @@ private:
   GLFWwindow* window_;
   std::unique_ptr<Renderer> renderer_;
   std::unique_ptr<Camera> camera_;
+  std::unique_ptr<WorldStreamer> worldStreamer_;
 
   float timeSeconds_;
 };

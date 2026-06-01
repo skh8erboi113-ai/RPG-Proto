@@ -76,3 +76,6 @@ coverage/
 *.pem
 *.p12
 .env
+
+# Vertical slice package
+/vertical_slice_package/

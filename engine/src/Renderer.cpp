@@ -8,6 +8,12 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+#if BX_PLATFORM_LINUX
+#define GLFW_EXPOSE_NATIVE_X11
+#define GLFW_EXPOSE_NATIVE_GLX
+#include <GLFW/glfw3native.h>
+#endif
+
 namespace {
 
 struct PosColorVertex {
@@ -60,10 +66,9 @@ bool Renderer::Initialize(GLFWwindow* window, uint32_t width, uint32_t height) {
   init.resolution.height = height;
   init.resolution.reset  = BGFX_RESET_VSYNC;
 
-#if defined(_WIN32)
-  bgfx::PlatformData pd{};
-  pd.nwh = glfwGetWin32Window(window);
-  init.platformData = pd;
+#if BX_PLATFORM_LINUX
+  init.platformData.ndt = glfwGetX11Display();
+  init.platformData.nwh = (void*)(uintptr_t)glfwGetX11Window(window);
 #endif
 
   if (!bgfx::init(init)) {
@@ -85,7 +90,6 @@ bool Renderer::Initialize(GLFWwindow* window, uint32_t width, uint32_t height) {
 
   if (!CreateShaderProgram()) {
     std::cerr << "[Renderer] Failed to create shader program\n";
-    // We still can run with fixed pipeline on some backends, but better to have shaders.
   }
 
   initialized_ = true;
@@ -104,8 +108,7 @@ bool Renderer::CreateCube() {
 }
 
 bool Renderer::CreateShaderProgram() {
-  // Adjust paths to wherever you store compiled shaders
-  program_ = LoadProgram("shaders/vs_basic.bin", "shaders/fs_basic.bin");
+  program_ = ShaderUtils::loadProgram("shaders/vs_basic.bin", "shaders/fs_basic.bin");
   return bgfx::isValid(program_);
 }
 
@@ -118,6 +121,10 @@ void Renderer::Resize(uint32_t width, uint32_t height) {
 void Renderer::RenderFrame(float timeSeconds) {
   if (!initialized_) return;
 
+  if (camera_) {
+      bgfx::setViewTransform(0, camera_->GetViewMatrix(), camera_->GetProjMatrix());
+  }
+
   bgfx::touch(0);
 
   float mtx[16];
@@ -129,9 +136,9 @@ void Renderer::RenderFrame(float timeSeconds) {
   bgfx::setState(BGFX_STATE_DEFAULT);
 
   if (bgfx::isValid(program_)) {
-    bgfx::submit(0, program_);
+    bgfx::submit(0, program_, 0, BGFX_DISCARD_ALL);
   } else {
-    bgfx::submit(0);
+    bgfx::submit(0, BGFX_INVALID_HANDLE, 0, BGFX_DISCARD_ALL);
   }
 
   bgfx::frame();
