@@ -1,0 +1,31 @@
+name: Performance Benchmarks
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    name: Performance Benchmarks
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake ninja-build g++-12 time
+
+    - name: Build (Release)
+      run: |
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+        cmake --build build --config Release -j4
+
+    - name: Run benchmarks
+      run: |
+        echo "=== Engine Benchmark ==="
+        /usr/bin/time -v ./build/bin/tests/test_stats || true
+        echo "Build completed successfully"

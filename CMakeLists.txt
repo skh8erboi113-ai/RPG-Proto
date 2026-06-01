@@ -1,8 +1,13 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20)
 project(RPG-Proto CXX)
 
+# ============================================================================
+# Compiler Configuration for Maximum Performance
+# ============================================================================
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -DNDEBUG -flto")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -fno-inline")
 
 if(POLICY CMP0135)
   cmake_policy(SET CMP0135 NEW)

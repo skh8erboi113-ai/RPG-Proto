@@ -10,6 +10,10 @@ add_library(engine
     src/WorldStreamer.cpp
 )
 
+# Create the engine library
+add_library(engine STATIC ${ENGINE_SOURCES})
+
+# Public include directory
 target_include_directories(engine PUBLIC include)
 target_link_libraries(engine PUBLIC bgfx bx bimg)
 
