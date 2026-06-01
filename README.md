@@ -1,39 +1,46 @@
-Modern Gothic RPG — Prototype Repository
-Status: Design and engineering blueprint with vertical slice artifacts and prototype code.
-Scope: Production‑ready design docs, skill/loot/recipe JSON, vertical slice manifest and scripts, C++ skeleton modules, unit tests, and asset pipeline helpers.
+# Modern Gothic RPG — Prototype Repository
 
-Quick Project Overview
-What this repo contains
+## Status
+Design and engineering blueprint with vertical slice artifacts and prototype code.
 
-Design docs: full game design, mission scripts, skill trees, loot tables, crafting recipes.
+## Quick Project Overview
+This repository contains a modular C++ engine skeleton and design documentation for a Modern Gothic RPG.
 
-Vertical slice: Ashbourne prototype manifest, asset placeholders, build and import scripts.
+### Key Components
+- **Engine Skeleton**: Modular C++ core with character, renderer (bgfx), camera, and world streaming systems.
+- **Game Application**: A prototype entry point demonstrating the engine's lifecycle.
+- **Build System**: Self-contained CMake build using `FetchContent` for dependencies.
+- **Design Docs**: Full game design, skill trees, loot tables, and crafting recipes in `docs/`.
+- **Scripts**: Asset import and metadata generation helpers in `scripts/`.
 
-Engine skeleton: modular C++ game core with character, stats, skills, inventory, crafting, save, and wanted systems.
+## Prerequisites
+- **CMake**: 3.16 or newer
+- **C++20 Toolchain**: GCC 10+, Clang 10+, or MSVC 2019+
+- **System Libraries (Linux)**: `libglfw3-dev`, `libgl1-mesa-dev`, `libglu1-mesa-dev`, and X11 development headers.
 
-Build system: CMake files for client, optional server, and unit tests.
+## Building and Running
 
-Tools: Python asset import and metadata generators.
+### Build
+```bash
+cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+```
 
-Tests: GoogleTest unit test examples for core systems.
+### Run Game
+```bash
+./build/game/game
+```
 
-Intended use
+### Run Tests
+```bash
+# Use xvfb-run if in a headless environment
+xvfb-run ./build/tests/test_stats
+```
 
-Start a vertical slice implementation.
-
-Hand off to engineers, designers, and artists.
-
-Iterate into a full production pipeline.
-
-Prerequisites
-Required
-
-CMake 3.16 or newer
-
-C++17 toolchain (GCC, Clang, or MSVC)
-
-Python 3.8+ for asset scripts
-
-nlohmann/json library (included under third_party or via package manager)
-
-GoogleTest for unit tests (included under third_party or via package manager)
+## Project Structure
+- `engine/`: Core engine library source and includes.
+- `game/`: Main game application source.
+- `tests/`: Unit tests using GoogleTest.
+- `docs/`: Design documentation and JSON data.
+- `scripts/`: Helper scripts for assets and builds.
+- `shaders/`: bgfx shader source files.
