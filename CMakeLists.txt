@@ -15,7 +15,11 @@ endif()
 
 include(FetchContent)
 
-# bgfx.cmake
+# ============================================================================
+# Graphics & Dependencies
+# ============================================================================
+
+# bgfx.cmake - Graphics abstraction layer
 FetchContent_Declare(
   bgfx
   GIT_REPOSITORY https://github.com/bkaradzic/bgfx.cmake.git
@@ -23,19 +27,23 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(bgfx)
 
-# GoogleTest
+# GoogleTest - Unit testing
 FetchContent_Declare(
   googletest
   URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
 )
 FetchContent_MakeAvailable(googletest)
 
-# nlohmann/json
+# nlohmann/json - JSON parsing
 FetchContent_Declare(
   json
   URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
 )
 FetchContent_MakeAvailable(json)
+
+# ============================================================================
+# Build Subdirectories
+# ============================================================================
 
 enable_testing()
 
