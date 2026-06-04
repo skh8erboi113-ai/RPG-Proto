@@ -21,11 +21,3 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(GLFW REQUIRED glfw3)
 target_link_libraries(engine PRIVATE ${GLFW_LIBRARIES})
 target_include_directories(engine PRIVATE ${GLFW_INCLUDE_DIRS})
-
-# Link shader build target as dependency
-add_dependencies(engine engine_shaders)
-
-# Configure shader binary directory as compile definition
-target_compile_definitions(engine PRIVATE
-  "SHADER_BIN_DIR=\"${CMAKE_BINARY_DIR}/game/shaders\""
-)
