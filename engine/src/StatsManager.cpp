@@ -25,7 +25,7 @@ void StatsManager::AdjustAlignment(f32 delta) {
 
 f32 StatsManager::CalculateXPForLevel(u32 level) const {
   // Using a standard RPG curve: 100 * 1.1^(level-1)
-  return 100.0f * std::pow(1.1f, static_cast<f32>(level - 1));
+  return 100.0f * std::pow(1.08f, static_cast<f32>(level - 1));
 }
 
 } // namespace engine
