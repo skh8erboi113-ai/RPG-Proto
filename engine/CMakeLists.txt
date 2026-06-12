@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.16)
 
 set(ENGINE_SOURCES
     src/Camera.cpp
+    src/CharacterController.cpp
+    src/StatsManager.cpp
+    src/SkillManager.cpp
+    src/Inventory.cpp
+    src/CraftingManager.cpp
     src/Mesh.cpp
     src/ShaderUtils.cpp
     src/Terrain.cpp
@@ -15,7 +20,7 @@ add_library(engine STATIC ${ENGINE_SOURCES})
 
 # Public include directory
 target_include_directories(engine PUBLIC include)
-target_link_libraries(engine PUBLIC bgfx bx bimg)
+target_link_libraries(engine PUBLIC bgfx bx bimg nlohmann_json::nlohmann_json)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GLFW REQUIRED glfw3)

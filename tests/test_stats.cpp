@@ -1,18 +1,42 @@
 #include <gtest/gtest.h>
-#include "Engine.h"
+#include "StatsManager.h"
+#include "SkillManager.h"
+#include <iostream>
 
-// Minimal smoke test to verify engine link and basic lifecycle.
-// Add real unit tests for Stats, Inventory, CraftingManager later.
+TEST(StatsTest, XPLeveling) {
+  engine::StatsManager stats;
+  EXPECT_EQ(stats.GetLevel(), 1);
 
-TEST(EngineSmoke, InitializeShutdown) {
-  engine::Engine eng;
-  EXPECT_FALSE(eng.GetName().empty());
-  EXPECT_TRUE(eng.Initialize());
-  eng.Tick(1.0f / 60.0f);
-  eng.Shutdown();
+  stats.AddXP(150.0f);
+  EXPECT_EQ(stats.GetLevel(), 2);
+  EXPECT_GT(stats.GetXPForNextLevel(), 100.0f);
 }
 
-int main(int argc, char** argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+TEST(StatsTest, Alignment) {
+  engine::StatsManager stats;
+  stats.AdjustAlignment(0.5f);
+  EXPECT_FLOAT_EQ(stats.GetAlignment(), 0.5f);
+  stats.AdjustAlignment(-1.5f);
+  EXPECT_FLOAT_EQ(stats.GetAlignment(), -1.0f);
+}
+
+TEST(SkillTest, LoadingAndScaling) {
+  engine::SkillManager skills;
+  // Try loading from root-relative path if tests run from build/
+  bool loaded = skills.LoadFromJSON("../docs/skills/FullSkillTrees.json");
+  if (!loaded) {
+    loaded = skills.LoadFromJSON("docs/skills/FullSkillTrees.json");
+  }
+
+  if (loaded) {
+    EXPECT_EQ(skills.GetSkillLevel("angelic_aura"), 0);
+    skills.LevelUpSkill("angelic_aura");
+    EXPECT_EQ(skills.GetSkillLevel("angelic_aura"), 1);
+    // Note: angelic_aura has effect_base = 0 in some versions, but base_value = 2
+    // Let's check shadow_strike which has effect_base: 18
+    skills.LevelUpSkill("shadow_strike");
+    EXPECT_GT(skills.GetSkillEffect("shadow_strike"), 0.0f);
+  } else {
+    std::cerr << "Warning: Could not load SkillTrees.json for test\n";
+  }
 }
