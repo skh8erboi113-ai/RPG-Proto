@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "StatsManager.h"
 #include "SkillManager.h"
+#include "WantedManager.h"
 #include <iostream>
 
 TEST(StatsTest, XPLeveling) {
@@ -22,7 +23,6 @@ TEST(StatsTest, Alignment) {
 
 TEST(SkillTest, LoadingAndScaling) {
   engine::SkillManager skills;
-  // Try loading from root-relative path if tests run from build/
   bool loaded = skills.LoadFromJSON("../docs/skills/FullSkillTrees.json");
   if (!loaded) {
     loaded = skills.LoadFromJSON("docs/skills/FullSkillTrees.json");
@@ -32,11 +32,19 @@ TEST(SkillTest, LoadingAndScaling) {
     EXPECT_EQ(skills.GetSkillLevel("angelic_aura"), 0);
     skills.LevelUpSkill("angelic_aura");
     EXPECT_EQ(skills.GetSkillLevel("angelic_aura"), 1);
-    // Note: angelic_aura has effect_base = 0 in some versions, but base_value = 2
-    // Let's check shadow_strike which has effect_base: 18
     skills.LevelUpSkill("shadow_strike");
     EXPECT_GT(skills.GetSkillEffect("shadow_strike"), 0.0f);
   } else {
     std::cerr << "Warning: Could not load SkillTrees.json for test\n";
   }
+}
+
+TEST(WantedTest, CrimeAndDecay) {
+  engine::WantedManager wanted;
+  wanted.ReportCrime("Ashbourne", 50);
+  EXPECT_EQ(wanted.GetWantedLevel("Ashbourne"), engine::WantedLevel::Medium);
+
+  wanted.Update(100.0f); // Should decay 50 points
+  EXPECT_EQ(wanted.GetCrimePoints("Ashbourne"), 0);
+  EXPECT_EQ(wanted.GetWantedLevel("Ashbourne"), engine::WantedLevel::Clean);
 }

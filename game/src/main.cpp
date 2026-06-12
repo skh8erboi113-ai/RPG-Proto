@@ -4,6 +4,7 @@
 #include "Inventory.h"
 #include "CraftingManager.h"
 #include "CharacterController.h"
+#include "WantedManager.h"
 
 int main(int argc, char** argv) {
   (void)argc; (void)argv;
@@ -21,6 +22,7 @@ int main(int argc, char** argv) {
   auto& inv = eng.GetInventory();
   auto& cm = eng.GetCrafting();
   auto& charCtrl = eng.GetCharacter();
+  auto& wanted = eng.GetWanted();
 
   stats.AddXP(50.0f);
   std::cout << "Player Level: " << stats.GetLevel() << " XP: " << stats.GetXP() << "\n";
@@ -31,6 +33,9 @@ int main(int argc, char** argv) {
   if (cm.Craft("health_tonic_minor", inv)) {
     std::cout << "Successfully crafted Minor Health Tonic!\n";
   }
+
+  wanted.ReportCrime("Ashbourne", 15);
+  std::cout << "Wanted Level in Ashbourne: " << (int)wanted.GetWantedLevel("Ashbourne") << "\n";
 
   charCtrl.Move(1.0f, 0.0f, 1.0f);
 
