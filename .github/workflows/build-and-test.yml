@@ -12,6 +12,7 @@ jobs:
     name: Build Core (No Graphics)
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         cxx_standard: [20]
@@ -26,19 +27,19 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt-get install -y cmake ninja-build g++-12 build-essential pkg-config libglfw3-dev libx11-dev
+        sudo apt-get install -y cmake ninja-build g++-12 build-essential pkg-config libglfw3-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 100
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 100
 
     - name: Install build dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
-        brew install cmake ninja glfw3
+        brew install cmake ninja glfw
 
     - name: Install build dependencies (Windows)
       if: runner.os == 'Windows'
       run: |
-        choco install cmake ninja -y
+        choco install cmake ninja glfw3 -y
 
     - name: Create build directory
       run: cmake -E make_directory build
