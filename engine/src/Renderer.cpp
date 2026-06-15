@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include "Camera.h"
 #include "ShaderUtils.h"
+#include "Mesh.h"
 
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
@@ -14,42 +15,11 @@
 #include <GLFW/glfw3native.h>
 #endif
 
-namespace {
-
-struct PosColorVertex {
-  float x, y, z;
-  uint32_t abgr;
-};
-
-static PosColorVertex s_cubeVertices[] = {
-  {-1.0f,  1.0f,  1.0f, 0xff0000ff},
-  { 1.0f,  1.0f,  1.0f, 0xff00ff00},
-  {-1.0f, -1.0f,  1.0f, 0xffff0000},
-  { 1.0f, -1.0f,  1.0f, 0xffffffff},
-  {-1.0f,  1.0f, -1.0f, 0xff0000ff},
-  { 1.0f,  1.0f, -1.0f, 0xff00ff00},
-  {-1.0f, -1.0f, -1.0f, 0xffff0000},
-  { 1.0f, -1.0f, -1.0f, 0xffffffff},
-};
-
-static const uint16_t s_cubeIndices[] = {
-  0, 1, 2, 1, 3, 2,
-  4, 6, 5, 5, 6, 7,
-  0, 2, 4, 4, 2, 6,
-  1, 5, 3, 5, 7, 3,
-  0, 4, 1, 4, 1, 5,
-  2, 3, 6, 6, 3, 7,
-};
-
-} // namespace
-
 namespace engine {
 
 Renderer::Renderer()
   : initialized_(false),
     program_(BGFX_INVALID_HANDLE),
-    vbh_(BGFX_INVALID_HANDLE),
-    ibh_(BGFX_INVALID_HANDLE),
     camera_(nullptr) {
 }
 
@@ -79,32 +49,17 @@ bool Renderer::Initialize(GLFWwindow* window, uint32_t width, uint32_t height) {
   bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
   bgfx::setViewRect(0, 0, 0, width, height);
 
-  vertexLayout_.begin()
-    .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
-    .add(bgfx::Attrib::Color0,   4, bgfx::AttribType::Uint8, true)
-    .end();
-
-  if (!CreateCube()) {
-    return false;
-  }
-
   if (!CreateShaderProgram()) {
     std::cerr << "[Renderer] Failed to create shader program\n";
   }
 
+  characterMesh_ = std::make_unique<Mesh>();
+  if (!characterMesh_->LoadFromOBJ("assets/simple_box.obj")) {
+    std::cerr << "[Renderer] Failed to load assets/simple_box.obj\n";
+  }
+
   initialized_ = true;
   return true;
-}
-
-bool Renderer::CreateCube() {
-  vbh_ = bgfx::createVertexBuffer(
-    bgfx::makeRef(s_cubeVertices, sizeof(s_cubeVertices)),
-    vertexLayout_
-  );
-  ibh_ = bgfx::createIndexBuffer(
-    bgfx::makeRef(s_cubeIndices, sizeof(s_cubeIndices))
-  );
-  return bgfx::isValid(vbh_) && bgfx::isValid(ibh_);
 }
 
 bool Renderer::CreateShaderProgram() {
@@ -123,18 +78,15 @@ void Renderer::RenderFrame(float timeSeconds) {
 
   bgfx::touch(0);
 
+  if (camera_) {
+    bgfx::setViewTransform(0, camera_->GetViewMatrix(), camera_->GetProjMatrix());
+  }
+
   float mtx[16];
   bx::mtxRotateY(mtx, timeSeconds);
 
-  bgfx::setTransform(mtx);
-  bgfx::setVertexBuffer(0, vbh_);
-  bgfx::setIndexBuffer(ibh_);
-  bgfx::setState(BGFX_STATE_DEFAULT);
-
   if (bgfx::isValid(program_)) {
-    bgfx::submit(0, program_, 0, BGFX_DISCARD_ALL);
-  } else {
-    bgfx::submit(0, BGFX_INVALID_HANDLE, 0, BGFX_DISCARD_ALL);
+    characterMesh_->Submit(0, program_, mtx);
   }
 
   bgfx::frame();
@@ -143,8 +95,7 @@ void Renderer::RenderFrame(float timeSeconds) {
 void Renderer::Shutdown() {
   if (!initialized_) return;
 
-  if (bgfx::isValid(vbh_)) bgfx::destroy(vbh_);
-  if (bgfx::isValid(ibh_)) bgfx::destroy(ibh_);
+  characterMesh_.reset();
   if (bgfx::isValid(program_)) bgfx::destroy(program_);
 
   bgfx::shutdown();

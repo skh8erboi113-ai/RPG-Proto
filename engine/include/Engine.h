@@ -16,6 +16,7 @@ class SkillManager;
 class Inventory;
 class CraftingManager;
 class WantedManager;
+class RitualManager;
 
 class Engine {
 public:
@@ -34,6 +35,7 @@ public:
   Inventory& GetInventory() { return *inventory_; }
   CraftingManager& GetCrafting() { return *craftingManager_; }
   WantedManager& GetWanted() { return *wantedManager_; }
+  RitualManager& GetRitual() { return *ritualManager_; }
   CharacterController& GetCharacter() { return *characterController_; }
 
 private:
@@ -51,6 +53,7 @@ private:
   std::unique_ptr<Inventory> inventory_;
   std::unique_ptr<CraftingManager> craftingManager_;
   std::unique_ptr<WantedManager> wantedManager_;
+  std::unique_ptr<RitualManager> ritualManager_;
 
   float timeSeconds_;
 };

@@ -8,6 +8,7 @@
 #include "Inventory.h"
 #include "CraftingManager.h"
 #include "WantedManager.h"
+#include "RitualManager.h"
 
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -49,6 +50,7 @@ bool Engine::Initialize() {
   inventory_ = std::make_unique<Inventory>();
   craftingManager_ = std::make_unique<CraftingManager>();
   wantedManager_ = std::make_unique<WantedManager>();
+  ritualManager_ = std::make_unique<RitualManager>();
 
   // Load data
   if (!skillManager_->LoadFromJSON("docs/skills/FullSkillTrees.json")) {
@@ -65,6 +67,7 @@ bool Engine::Initialize() {
     glfwTerminate();
     return false;
   }
+  renderer_->SetCamera(camera_.get());
 
   initialized_ = true;
   std::cout << "[engine] Initialized " << name_ << std::endl;
@@ -91,6 +94,8 @@ void Engine::Tick(float dt) {
   worldStreamer_->Update(dt);
 
   wantedManager_->Update(dt);
+  statsManager_->Update(dt);
+  ritualManager_->Update(dt, 0);
 
   // Make camera follow player (offset)
   camera_->SetPosition(p[0], p[1] + 5.0f, p[2] - 10.0f);
@@ -111,6 +116,7 @@ void Engine::Shutdown() {
   inventory_.reset();
   craftingManager_.reset();
   wantedManager_.reset();
+  ritualManager_.reset();
 
   if (window_) {
     glfwDestroyWindow(window_);

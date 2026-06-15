@@ -5,6 +5,7 @@
 #include "CraftingManager.h"
 #include "CharacterController.h"
 #include "WantedManager.h"
+#include "RitualManager.h"
 
 int main(int argc, char** argv) {
   (void)argc; (void)argv;
@@ -23,19 +24,26 @@ int main(int argc, char** argv) {
   auto& cm = eng.GetCrafting();
   auto& charCtrl = eng.GetCharacter();
   auto& wanted = eng.GetWanted();
+  auto& ritual = eng.GetRitual();
 
   stats.AddXP(50.0f);
-  std::cout << "Player Level: " << stats.GetLevel() << " XP: " << stats.GetXP() << "\n";
+  std::cout << "Player Level: " << stats.GetLevel()
+            << " | HP: " << stats.GetHealth() << "/" << stats.GetMaxHealth()
+            << " | Stamina: " << stats.GetStamina() << "\n";
 
   inv.AddItem("HERB_A", 10);
   inv.AddItem("COIN_SMALL", 50);
 
   if (cm.Craft("health_tonic_minor", inv)) {
     std::cout << "Successfully crafted Minor Health Tonic!\n";
+    stats.Heal(20.0f);
   }
 
   wanted.ReportCrime("Ashbourne", 15);
   std::cout << "Wanted Level in Ashbourne: " << (int)wanted.GetWantedLevel("Ashbourne") << "\n";
+
+  ritual.StartRitual("Exorcism");
+  std::cout << "Started Exorcism ritual...\n";
 
   charCtrl.Move(1.0f, 0.0f, 1.0f);
 
@@ -43,9 +51,17 @@ int main(int argc, char** argv) {
   while (eng.IsRunning()) {
     eng.Tick(1.0f / 60.0f);
     frameCount++;
+
+    if (frameCount % 10 == 0 && ritual.GetProgress() < 1.0f) {
+       std::cout << "Ritual progress: " << (int)(ritual.GetProgress() * 100) << "%\n";
+    }
+
     if (getenv("CI") && frameCount > 100) break;
-    // Break after some frames for non-interactive demo
     if (frameCount > 60) break;
+  }
+
+  if (ritual.WasSuccess()) {
+    std::cout << "Ritual progress: 100% - Finished!\n";
   }
 
   eng.Shutdown();
