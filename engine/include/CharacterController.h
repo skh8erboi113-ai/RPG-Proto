@@ -10,6 +10,8 @@ public:
   void Move(float dx, float dy, float dz);
   void Update(float dt);
 
+  const float* GetPosition() const { return pos_; }
+
 private:
   float pos_[3];
 };
