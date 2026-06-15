@@ -1,9 +1,4 @@
 #include "CharacterController.h"
-#include "Engine.h"
-#include "StatsManager.h"
-#include "EnemyManager.h"
-#include <cmath>
-#include <iostream>
 
 namespace engine {
 

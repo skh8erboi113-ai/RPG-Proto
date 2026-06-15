@@ -47,7 +47,38 @@ TEST(InteractionTest, CollectItem) {
   EXPECT_EQ(inv.GetItemCount("REWARD_A"), 1);
 }
 
-int main(int argc, char** argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+TEST(StatsTest, Alignment) {
+  engine::StatsManager stats;
+  stats.AdjustAlignment(0.5f);
+  EXPECT_FLOAT_EQ(stats.GetAlignment(), 0.5f);
+  stats.AdjustAlignment(-1.5f);
+  EXPECT_FLOAT_EQ(stats.GetAlignment(), -1.0f);
+}
+
+TEST(SkillTest, LoadingAndScaling) {
+  engine::SkillManager skills;
+  bool loaded = skills.LoadFromJSON("../docs/skills/FullSkillTrees.json");
+  if (!loaded) {
+    loaded = skills.LoadFromJSON("docs/skills/FullSkillTrees.json");
+  }
+
+  if (loaded) {
+    EXPECT_EQ(skills.GetSkillLevel("angelic_aura"), 0);
+    skills.LevelUpSkill("angelic_aura");
+    EXPECT_EQ(skills.GetSkillLevel("angelic_aura"), 1);
+    skills.LevelUpSkill("shadow_strike");
+    EXPECT_GT(skills.GetSkillEffect("shadow_strike"), 0.0f);
+  } else {
+    std::cerr << "Warning: Could not load SkillTrees.json for test\n";
+  }
+}
+
+TEST(WantedTest, CrimeAndDecay) {
+  engine::WantedManager wanted;
+  wanted.ReportCrime("Ashbourne", 50);
+  EXPECT_EQ(wanted.GetWantedLevel("Ashbourne"), engine::WantedLevel::Medium);
+
+  wanted.Update(100.0f); // Should decay 50 points
+  EXPECT_EQ(wanted.GetCrimePoints("Ashbourne"), 0);
+  EXPECT_EQ(wanted.GetWantedLevel("Ashbourne"), engine::WantedLevel::Clean);
 }

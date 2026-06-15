@@ -5,18 +5,13 @@
 namespace engine {
 
 StatsManager::StatsManager()
-  : level_(1), xp_(0.0f), alignment_(0.0f),
-    health_(100.0f), maxHealth_(100.0f),
-    stamina_(50.0f), maxStamina_(50.0f) {}
+  : level_(1), xp_(0.0f), alignment_(0.0f) {}
 
 void StatsManager::AddXP(f32 amount) {
   xp_ += amount;
   while (xp_ >= GetXPForNextLevel()) {
     xp_ -= GetXPForNextLevel();
     level_++;
-    // Boost max health on level up
-    maxHealth_ += 10.0f;
-    health_ = maxHealth_;
   }
 }
 

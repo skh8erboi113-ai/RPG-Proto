@@ -8,10 +8,6 @@
 #include "Inventory.h"
 #include "CraftingManager.h"
 #include "WantedManager.h"
-#include "RitualManager.h"
-#include "EnemyManager.h"
-#include "InteractionManager.h"
-#include "HUD.h"
 
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -99,13 +95,6 @@ void Engine::Tick(float dt) {
   worldStreamer_->Update(dt);
 
   wantedManager_->Update(dt);
-  statsManager_->Update(dt);
-  ritualManager_->Update(dt, 0);
-  enemyManager_->Update(dt, p);
-  interactionManager_->Update(p, *inventory_);
-
-  // HUD
-  HUD::Draw(*this);
 
   // Make camera follow player (offset)
   camera_->SetPosition(p[0], p[1] + 5.0f, p[2] - 10.0f);
