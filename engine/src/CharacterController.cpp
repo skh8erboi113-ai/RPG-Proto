@@ -1,4 +1,9 @@
 #include "CharacterController.h"
+#include "Engine.h"
+#include "StatsManager.h"
+#include "EnemyManager.h"
+#include <cmath>
+#include <iostream>
 
 namespace engine {
 
@@ -21,8 +26,30 @@ void CharacterController::Move(float dx, float dy, float dz) {
 }
 
 void CharacterController::Update(float dt) {
-  // Logic for character physics or animation could go here
   (void)dt;
+}
+
+bool CharacterController::PrimaryAttack(Engine& engine) {
+  auto& stats = engine.GetStats();
+  if (stats.ConsumeStamina(15.0f)) {
+    std::cout << "[Combat] Player attacks!\n";
+
+    auto& enemies = engine.GetEnemies().GetEnemies();
+    for (size_t i = 0; i < enemies.size(); ++i) {
+      if (enemies[i].dead) continue;
+
+      float dx = pos_[0] - enemies[i].pos[0];
+      float dy = pos_[1] - enemies[i].pos[1];
+      float dz = pos_[2] - enemies[i].pos[2];
+      float dist = std::sqrt(dx*dx + dy*dy + dz*dz);
+
+      if (dist < 3.0f) {
+        engine.GetEnemies().TakeDamage(i, 25.0f);
+      }
+    }
+    return true;
+  }
+  return false;
 }
 
 } // namespace engine

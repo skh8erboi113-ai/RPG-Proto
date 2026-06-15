@@ -9,6 +9,9 @@
 #include "CraftingManager.h"
 #include "WantedManager.h"
 #include "RitualManager.h"
+#include "EnemyManager.h"
+#include "InteractionManager.h"
+#include "HUD.h"
 
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -51,6 +54,8 @@ bool Engine::Initialize() {
   craftingManager_ = std::make_unique<CraftingManager>();
   wantedManager_ = std::make_unique<WantedManager>();
   ritualManager_ = std::make_unique<RitualManager>();
+  enemyManager_ = std::make_unique<EnemyManager>();
+  interactionManager_ = std::make_unique<InteractionManager>();
 
   // Load data
   if (!skillManager_->LoadFromJSON("docs/skills/FullSkillTrees.json")) {
@@ -96,6 +101,11 @@ void Engine::Tick(float dt) {
   wantedManager_->Update(dt);
   statsManager_->Update(dt);
   ritualManager_->Update(dt, 0);
+  enemyManager_->Update(dt, p);
+  interactionManager_->Update(p, *inventory_);
+
+  // HUD
+  HUD::Draw(*this);
 
   // Make camera follow player (offset)
   camera_->SetPosition(p[0], p[1] + 5.0f, p[2] - 10.0f);
@@ -117,6 +127,8 @@ void Engine::Shutdown() {
   craftingManager_.reset();
   wantedManager_.reset();
   ritualManager_.reset();
+  enemyManager_.reset();
+  interactionManager_.reset();
 
   if (window_) {
     glfwDestroyWindow(window_);

@@ -10,6 +10,9 @@ set(ENGINE_SOURCES
     src/WantedManager.cpp
     src/RitualManager.cpp
     src/SaveManager.cpp
+    src/HUD.cpp
+    src/EnemyManager.cpp
+    src/InteractionManager.cpp
     src/Mesh.cpp
     src/ShaderUtils.cpp
     src/Terrain.cpp

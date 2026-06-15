@@ -6,6 +6,8 @@
 #include "CharacterController.h"
 #include "WantedManager.h"
 #include "RitualManager.h"
+#include "EnemyManager.h"
+#include "InteractionManager.h"
 
 int main(int argc, char** argv) {
   (void)argc; (void)argv;
@@ -18,51 +20,40 @@ int main(int argc, char** argv) {
 
   std::cout << "Running Modern Gothic RPG Prototype\n";
 
-  // Demonstrate RPG systems
-  auto& stats = eng.GetStats();
-  auto& inv = eng.GetInventory();
-  auto& cm = eng.GetCrafting();
   auto& charCtrl = eng.GetCharacter();
-  auto& wanted = eng.GetWanted();
-  auto& ritual = eng.GetRitual();
+  auto& interaction = eng.GetInteraction();
+  auto& enemies = eng.GetEnemies();
+  auto& inventory = eng.GetInventory();
 
-  stats.AddXP(50.0f);
-  std::cout << "Player Level: " << stats.GetLevel()
-            << " | HP: " << stats.GetHealth() << "/" << stats.GetMaxHealth()
-            << " | Stamina: " << stats.GetStamina() << "\n";
-
-  inv.AddItem("HERB_A", 10);
-  inv.AddItem("COIN_SMALL", 50);
-
-  if (cm.Craft("health_tonic_minor", inv)) {
-    std::cout << "Successfully crafted Minor Health Tonic!\n";
-    stats.Heal(20.0f);
-  }
-
-  wanted.ReportCrime("Ashbourne", 15);
-  std::cout << "Wanted Level in Ashbourne: " << (int)wanted.GetWantedLevel("Ashbourne") << "\n";
-
-  ritual.StartRitual("Exorcism");
-  std::cout << "Started Exorcism ritual...\n";
-
-  charCtrl.Move(1.0f, 0.0f, 1.0f);
+  // Setup Vertical Slice scenario
+  interaction.AddInteractable("Clue_Manor_01", 5.0f, 0.0f, 5.0f, "ITEM_CLUE_A");
+  enemies.SpawnEnemy("Minor_Ghost", 10.0f, 0.0f, 10.0f);
 
   int frameCount = 0;
   while (eng.IsRunning()) {
     eng.Tick(1.0f / 60.0f);
     frameCount++;
 
-    if (frameCount % 10 == 0 && ritual.GetProgress() < 1.0f) {
-       std::cout << "Ritual progress: " << (int)(ritual.GetProgress() * 100) << "%\n";
+    // Simulate mission flow
+    if (frameCount == 10) {
+      std::cout << "[Mission] Moving to manor clue...\n";
+      charCtrl.SetPosition(4.5f, 0.0f, 4.5f);
+    }
+
+    if (frameCount == 30) {
+      std::cout << "[Mission] Clue collected. Moving to ghost encounter...\n";
+      charCtrl.SetPosition(9.0f, 0.0f, 9.0f);
+    }
+
+    if (frameCount >= 40 && frameCount <= 42) {
+      charCtrl.PrimaryAttack(eng);
     }
 
     if (getenv("CI") && frameCount > 100) break;
-    if (frameCount > 60) break;
+    if (frameCount > 80) break;
   }
 
-  if (ritual.WasSuccess()) {
-    std::cout << "Ritual progress: 100% - Finished!\n";
-  }
+  std::cout << "[Mission] Inventory CLUE count: " << inventory.GetItemCount("ITEM_CLUE_A") << "\n";
 
   eng.Shutdown();
   return 0;
