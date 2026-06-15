@@ -49,6 +49,9 @@ bool Engine::Initialize() {
   inventory_ = std::make_unique<Inventory>();
   craftingManager_ = std::make_unique<CraftingManager>();
   wantedManager_ = std::make_unique<WantedManager>();
+  ritualManager_ = std::make_unique<RitualManager>();
+  enemyManager_ = std::make_unique<EnemyManager>();
+  interactionManager_ = std::make_unique<InteractionManager>();
 
   // Load data
   if (!skillManager_->LoadFromJSON("docs/skills/FullSkillTrees.json")) {
@@ -65,6 +68,7 @@ bool Engine::Initialize() {
     glfwTerminate();
     return false;
   }
+  renderer_->SetCamera(camera_.get());
 
   initialized_ = true;
   std::cout << "[engine] Initialized " << name_ << std::endl;
@@ -111,6 +115,9 @@ void Engine::Shutdown() {
   inventory_.reset();
   craftingManager_.reset();
   wantedManager_.reset();
+  ritualManager_.reset();
+  enemyManager_.reset();
+  interactionManager_.reset();
 
   if (window_) {
     glfwDestroyWindow(window_);

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <cstdint>
+#include <bgfx/bgfx.h>
 
 namespace engine {
 
@@ -12,16 +13,21 @@ struct MeshVertex {
 
 class Mesh {
 public:
-  Mesh() = default;
+  Mesh();
+  ~Mesh();
 
   bool LoadFromOBJ(const std::string& path);
-
-  const std::vector<MeshVertex>& GetVertices() const { return vertices_; }
-  const std::vector<uint16_t>& GetIndices() const { return indices_; }
+  void Submit(bgfx::ViewId viewId, bgfx::ProgramHandle program, const float* mtx);
 
 private:
   std::vector<MeshVertex> vertices_;
   std::vector<uint16_t> indices_;
+
+  bgfx::VertexBufferHandle vbh_;
+  bgfx::IndexBufferHandle ibh_;
+  bgfx::VertexLayout layout_;
+
+  void CreateBuffers();
 };
 
 } // namespace engine

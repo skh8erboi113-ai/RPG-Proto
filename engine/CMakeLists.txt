@@ -8,6 +8,11 @@ set(ENGINE_SOURCES
     src/Inventory.cpp
     src/CraftingManager.cpp
     src/WantedManager.cpp
+    src/RitualManager.cpp
+    src/SaveManager.cpp
+    src/HUD.cpp
+    src/EnemyManager.cpp
+    src/InteractionManager.cpp
     src/Mesh.cpp
     src/ShaderUtils.cpp
     src/Terrain.cpp

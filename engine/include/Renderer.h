@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 #include <bgfx/bgfx.h>
 
 struct GLFWwindow;
@@ -8,6 +9,7 @@ struct GLFWwindow;
 namespace engine {
 
 class Camera;
+class Mesh;
 
 class Renderer {
 public:
@@ -19,16 +21,16 @@ public:
   void RenderFrame(float timeSeconds);
   void Shutdown();
 
+  void SetCamera(Camera* cam) { camera_ = cam; }
+
 private:
   bool initialized_;
-  bgfx::VertexLayout vertexLayout_;
   bgfx::ProgramHandle program_;
-  bgfx::VertexBufferHandle vbh_;
-  bgfx::IndexBufferHandle ibh_;
+
+  std::unique_ptr<Mesh> characterMesh_;
 
   Camera* camera_; // not owned
 
-  bool CreateCube();
   bool CreateShaderProgram();
 };
 

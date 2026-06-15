@@ -44,3 +44,12 @@ xvfb-run ./build/tests/test_stats
 - `docs/`: Design documentation and JSON data.
 - `scripts/`: Helper scripts for assets and builds.
 - `shaders/`: bgfx shader source files.
+
+## Prototype Features
+The current version demonstrates the following core RPG systems:
+- **Character Controller**: 3D movement and positioning.
+- **Stats & Progression**: XP-based leveling (.08^n$ curve) and angelic/demonic alignment.
+- **Skill System**: JSON-based skill trees with dynamic scaling.
+- **Inventory & Crafting**: Item management and material-based crafting recipes.
+- **Wanted System**: Crime reporting and wanted levels tracked per city.
+- **Graphics & World**: Modern bgfx renderer with world streaming and player-following camera.
