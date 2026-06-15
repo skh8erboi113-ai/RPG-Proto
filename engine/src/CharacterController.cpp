@@ -1,3 +1,9 @@
+#include "Engine.h"
+#include "StatsManager.h"
+#include "EnemyManager.h"
+#include <iostream>
+#include <cmath>
+#include <cstddef>
 #include "CharacterController.h"
 
 namespace engine {

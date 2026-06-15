@@ -37,6 +37,15 @@ cmake --build build
 xvfb-run ./build/tests/test_stats
 ```
 
+## Repository Manifest
+For a machine-readable summary of the repository contents, see [MANIFEST.json](MANIFEST.json).
+
+## Validation
+To validate the repository structure and data files, run:
+```bash
+python3 scripts/validate_repo.py
+```
+
 ## Project Structure
 - `engine/`: Core engine library source and includes.
 - `game/`: Main game application source.

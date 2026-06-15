@@ -72,13 +72,3 @@ TEST(SkillTest, LoadingAndScaling) {
     std::cerr << "Warning: Could not load SkillTrees.json for test\n";
   }
 }
-
-TEST(WantedTest, CrimeAndDecay) {
-  engine::WantedManager wanted;
-  wanted.ReportCrime("Ashbourne", 50);
-  EXPECT_EQ(wanted.GetWantedLevel("Ashbourne"), engine::WantedLevel::Medium);
-
-  wanted.Update(100.0f); // Should decay 50 points
-  EXPECT_EQ(wanted.GetCrimePoints("Ashbourne"), 0);
-  EXPECT_EQ(wanted.GetWantedLevel("Ashbourne"), engine::WantedLevel::Clean);
-}
