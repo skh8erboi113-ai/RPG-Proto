@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
-enable_testing()
+
 add_executable(test_stats test_stats.cpp)
-target_link_libraries(test_stats PRIVATE engine GTest::gtest GTest::gtest_main)
-add_test(NAME StatsTests COMMAND test_stats)
+target_link_libraries(test_stats PRIVATE engine GTest::gtest_main)
+add_test(NAME EngineStats COMMAND test_stats)
+
+add_executable(test_crafting test_crafting.cpp)
+target_link_libraries(test_crafting PRIVATE engine GTest::gtest)
+add_test(NAME EngineCrafting COMMAND test_crafting)
