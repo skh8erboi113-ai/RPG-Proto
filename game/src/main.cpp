@@ -18,42 +18,68 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  std::cout << "Running Modern Gothic RPG Prototype\n";
+  std::cout << "Running Modern Gothic RPG Prototype - E2E Alignment Loop\n";
 
   auto& charCtrl = eng.GetCharacter();
-  auto& interaction = eng.GetInteraction();
   auto& enemies = eng.GetEnemies();
   auto& inventory = eng.GetInventory();
+  auto& stats = eng.GetStats();
+  auto& ritual = eng.GetRitual();
 
-  // Setup Vertical Slice scenario
-  interaction.AddInteractable("Clue_Manor_01", 5.0f, 0.0f, 5.0f, "ITEM_CLUE_A");
-  enemies.SpawnEnemy("Minor_Ghost", 10.0f, 0.0f, 10.0f);
+  // Setup scenario
+  enemies.SpawnEnemy("Elite_Ghost", 5.0f, 0.0f, 5.0f, "MAT_SPIRIT_ASH");
 
   int frameCount = 0;
+  bool ritualStarted = false;
+
   while (eng.IsRunning()) {
     eng.Tick(1.0f / 60.0f);
     frameCount++;
 
-    // Simulate mission flow
+    // 1. Move to enemy
     if (frameCount == 10) {
-      std::cout << "[Mission] Moving to manor clue...\n";
-      charCtrl.SetPosition(4.5f, 0.0f, 4.5f);
+      std::cout << "[Step 1] Moving to elite ghost...\n";
+      charCtrl.SetPosition(4.0f, 0.0f, 4.0f);
     }
 
-    if (frameCount == 30) {
-      std::cout << "[Mission] Clue collected. Moving to ghost encounter...\n";
-      charCtrl.SetPosition(9.0f, 0.0f, 9.0f);
-    }
-
-    if (frameCount >= 40 && frameCount <= 42) {
+    // 2. Attack and defeat enemy to get MAT_SPIRIT_ASH
+    if (frameCount >= 20 && frameCount <= 22) {
       charCtrl.PrimaryAttack(eng);
     }
 
-    if (getenv("CI") && frameCount > 100) break;
-    if (frameCount > 80) break;
+    // 3. Collect loot and adjust alignment
+    if (frameCount == 30) {
+      if (inventory.GetItemCount("MAT_SPIRIT_ASH") > 0) {
+        std::cout << "[Step 2] MAT_SPIRIT_ASH collected! Adjusting alignment to Angelic...\n";
+        stats.AdjustAlignment(0.8f);
+      }
+    }
+
+    // 4. Start ritual
+    if (frameCount == 40 && inventory.GetItemCount("MAT_SPIRIT_ASH") > 0) {
+        std::cout << "[Step 3] Starting Purify Ritual...\n";
+        inventory.RemoveItem("MAT_SPIRIT_ASH", 1);
+        ritual.StartRitual("Purify");
+        ritualStarted = true;
+    }
+
+    // 5. Update ritual
+    if (ritualStarted) {
+      if (ritual.Update(1.0f/60.0f, 82, eng)) { // Pass 'R' to speed up
+        std::cout << "[Step 4] Ritual complete!\n";
+        ritualStarted = false;
+      }
+    }
+
+    if (getenv("CI") && frameCount > 500) break;
+    if (frameCount > 300) break;
   }
 
-  std::cout << "[Mission] Inventory CLUE count: " << inventory.GetItemCount("ITEM_CLUE_A") << "\n";
+  std::cout << "\n--- Final State ---\n";
+  std::cout << "Alignment: " << stats.GetAlignment() << " (" << (int)stats.GetAlignmentType() << ")\n";
+  std::cout << "Inventory HOLY_RELICT: " << inventory.GetItemCount("HOLY_RELICT") << "\n";
+  std::cout << "Inventory SPIRIT_ESSENCE: " << inventory.GetItemCount("SPIRIT_ESSENCE") << "\n";
+  std::cout << "Inventory DEMON_HEART: " << inventory.GetItemCount("DEMON_HEART") << "\n";
 
   eng.Shutdown();
   return 0;

@@ -45,7 +45,7 @@ bool CharacterController::PrimaryAttack(Engine& engine) {
       float dist = std::sqrt(dx*dx + dy*dy + dz*dz);
 
       if (dist < 3.0f) {
-        engine.GetEnemies().TakeDamage(i, 25.0f);
+        engine.GetEnemies().TakeDamage(i, 25.0f, &engine.GetInventory());
       }
     }
     return true;

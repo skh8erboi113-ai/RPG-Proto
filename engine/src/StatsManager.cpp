@@ -5,7 +5,7 @@
 namespace engine {
 
 StatsManager::StatsManager()
-  : level_(1), xp_(0.0f), alignment_(0.0f) {}
+  : level_(1), xp_(0.0f), alignment_(0.0f), health_(100.0f), maxHealth_(100.0f), stamina_(100.0f), maxStamina_(100.0f) {}
 
 void StatsManager::AddXP(f32 amount) {
   xp_ += amount;
@@ -21,6 +21,12 @@ f32 StatsManager::GetXPForNextLevel() const {
 
 void StatsManager::AdjustAlignment(f32 delta) {
   alignment_ = std::clamp(alignment_ + delta, -1.0f, 1.0f);
+}
+
+AlignmentType StatsManager::GetAlignmentType() const {
+  if (alignment_ > 0.3f) return AlignmentType::ANGELIC;
+  if (alignment_ < -0.3f) return AlignmentType::DEMONIC;
+  return AlignmentType::NEUTRAL;
 }
 
 void StatsManager::Damage(f32 amount) {

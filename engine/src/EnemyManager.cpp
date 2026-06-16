@@ -1,4 +1,5 @@
 #include "EnemyManager.h"
+#include "Inventory.h"
 #include <cmath>
 #include <iostream>
 
@@ -6,9 +7,9 @@ namespace engine {
 
 EnemyManager::EnemyManager() {}
 
-void EnemyManager::SpawnEnemy(const std::string& type, float x, float y, float z) {
-  enemies_.push_back({type, {x, y, z}, 50.0f, "Idle", false});
-  std::cout << "[EnemyManager] Spawned " << type << " at (" << x << "," << y << "," << z << ")\n";
+void EnemyManager::SpawnEnemy(const std::string& type, float x, float y, float z, const std::string& loot) {
+  enemies_.push_back({type, {x, y, z}, 50.0f, "Idle", false, loot});
+  std::cout << "[EnemyManager] Spawned " << type << " at (" << x << "," << y << "," << z << ") with loot: " << loot << "\n";
 }
 
 void EnemyManager::Update(float dt, const float* playerPos) {
@@ -32,12 +33,16 @@ void EnemyManager::Update(float dt, const float* playerPos) {
   }
 }
 
-void EnemyManager::TakeDamage(size_t index, float amount) {
+void EnemyManager::TakeDamage(size_t index, float amount, Inventory* inventory) {
   if (index < enemies_.size()) {
     enemies_[index].health -= amount;
-    if (enemies_[index].health <= 0) {
+    if (enemies_[index].health <= 0 && !enemies_[index].dead) {
       enemies_[index].dead = true;
       std::cout << "[EnemyManager] " << enemies_[index].id << " defeated!\n";
+      if (!enemies_[index].lootItemId.empty() && inventory) {
+        inventory->AddItem(enemies_[index].lootItemId, 1);
+        std::cout << "[Loot] Dropped " << enemies_[index].lootItemId << "\n";
+      }
     }
   }
 }

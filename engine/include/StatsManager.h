@@ -3,6 +3,12 @@
 
 namespace engine {
 
+enum class AlignmentType {
+  ANGELIC,
+  DEMONIC,
+  NEUTRAL
+};
+
 class StatsManager {
 public:
   StatsManager();
@@ -14,6 +20,7 @@ public:
 
   void AdjustAlignment(f32 delta);
   f32 GetAlignment() const { return alignment_; } // -1.0 (Demonic) to 1.0 (Angelic)
+  AlignmentType GetAlignmentType() const;
 
   f32 GetHealth() const { return health_; }
   f32 GetMaxHealth() const { return maxHealth_; }
