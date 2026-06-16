@@ -8,6 +8,9 @@
 #include "Inventory.h"
 #include "CraftingManager.h"
 #include "WantedManager.h"
+#include "RitualManager.h"
+#include "EnemyManager.h"
+#include "InteractionManager.h"
 
 #include <GLFW/glfw3.h>
 #include <iostream>

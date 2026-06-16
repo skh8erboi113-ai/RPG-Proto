@@ -1,0 +1,38 @@
+{
+  "repository": "Modern Gothic RPG — Prototype",
+  "version": "1.0.0",
+  "last_curated": "2026-06-15",
+  "structure": {
+    "engine": {
+      "description": "Core RPG engine library (C++20)",
+      "path": "engine/",
+      "key_components": ["Renderer", "CharacterController", "StatsManager", "SkillManager"]
+    },
+    "game": {
+      "description": "Main game application/prototype entry point",
+      "path": "game/"
+    },
+    "docs": {
+      "description": "Design documentation and data files",
+      "path": "docs/",
+      "data_files": ["FullRecipes.json", "FullSkillTrees.json"]
+    },
+    "scripts": {
+      "description": "Asset management and build automation helpers",
+      "path": "scripts/"
+    },
+    "tests": {
+      "description": "Unit tests for engine systems",
+      "path": "tests/"
+    },
+    "shaders": {
+      "description": "bgfx shader sources and compiled binaries",
+      "path": "shaders/"
+    }
+  },
+  "metadata": {
+    "primary_language": "C++",
+    "build_system": "CMake",
+    "render_backend": "bgfx"
+  }
+}
