@@ -24,6 +24,7 @@ TEST(WantedTest, CrimeAndDecay) {
 
 TEST(EnemyTest, AIChaseAndDamage) {
   engine::EnemyManager em;
+  engine::Inventory inv;
   float playerPos[3] = {5.0f, 0.0f, 5.0f};
   em.SpawnEnemy("Ghost", 0.0f, 0.0f, 0.0f);
 
@@ -32,7 +33,7 @@ TEST(EnemyTest, AIChaseAndDamage) {
   EXPECT_GT(enemies[0].pos[0], 0.0f);
   EXPECT_EQ(enemies[0].state, "Chase");
 
-  em.TakeDamage(0, 60.0f);
+  em.TakeDamage(0, 60.0f, &inv);
   EXPECT_TRUE(enemies[0].dead);
 }
 
@@ -53,6 +54,9 @@ TEST(StatsTest, Alignment) {
   EXPECT_FLOAT_EQ(stats.GetAlignment(), 0.5f);
   stats.AdjustAlignment(-1.5f);
   EXPECT_FLOAT_EQ(stats.GetAlignment(), -1.0f);
+  EXPECT_EQ(stats.GetAlignmentType(), engine::AlignmentType::ANGELIC);
+  stats.AdjustAlignment(-2.0f);
+  EXPECT_EQ(stats.GetAlignmentType(), engine::AlignmentType::DEMONIC);
 }
 
 TEST(SkillTest, LoadingAndScaling) {
