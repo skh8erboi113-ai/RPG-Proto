@@ -32,6 +32,15 @@ public:
   bool ConsumeStamina(f32 amount);
   void Update(f32 dt);
 
+  // Setters for Save/Load
+  void SetLevel(u32 level) { level_ = level; }
+  void SetXP(f32 xp) { xp_ = xp; }
+  void SetAlignment(f32 alignment) { alignment_ = alignment; }
+  void SetHealth(f32 health) { health_ = health; }
+  void SetMaxHealth(f32 maxHealth) { maxHealth_ = maxHealth; }
+  void SetStamina(f32 stamina) { stamina_ = stamina; }
+  void SetMaxStamina(f32 maxStamina) { maxStamina_ = maxStamina; }
+
 private:
   u32 level_;
   f32 xp_;

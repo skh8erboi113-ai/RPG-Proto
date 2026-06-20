@@ -4,7 +4,7 @@
 #include "Mesh.h"
 
 #include <bgfx/bgfx.h>
-#include <bgfx/platform.h>
+#include <bx/platform.h>
 #include <bx/math.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
