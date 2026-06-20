@@ -17,8 +17,13 @@ bool SaveManager::SaveGame(const std::string& path, Engine& engine) {
   j["stats"]["alignment"] = stats.GetAlignment();
   j["stats"]["health"] = stats.GetHealth();
   j["stats"]["maxHealth"] = stats.GetMaxHealth();
+  j["stats"]["stamina"] = stats.GetStamina();
+  j["stats"]["maxStamina"] = stats.GetMaxStamina();
 
-  // Simple inventory serialization would go here
+  auto& inv = engine.GetInventory();
+  for (const auto& [id, count] : inv.GetItems()) {
+    j["inventory"][id] = count;
+  }
 
   std::ofstream file(path);
   if (!file.is_open()) return false;
@@ -31,11 +36,33 @@ bool SaveManager::LoadGame(const std::string& path, Engine& engine) {
   if (!file.is_open()) return false;
 
   nlohmann::json j;
-  file >> j;
+  try {
+    file >> j;
+  } catch (const std::exception& e) {
+    std::cerr << "[SaveManager] Parse error: " << e.what() << "\n";
+    return false;
+  }
 
   auto& stats = engine.GetStats();
-  // stats would need setters, or we manually apply
-  // For prototype, let's just log
+  if (j.contains("stats")) {
+    const auto& s = j["stats"];
+    if (s.contains("level")) stats.SetLevel(s["level"]);
+    if (s.contains("xp")) stats.SetXP(s["xp"]);
+    if (s.contains("alignment")) stats.SetAlignment(s["alignment"]);
+    if (s.contains("health")) stats.SetHealth(s["health"]);
+    if (s.contains("maxHealth")) stats.SetMaxHealth(s["maxHealth"]);
+    if (s.contains("stamina")) stats.SetStamina(s["stamina"]);
+    if (s.contains("maxStamina")) stats.SetMaxStamina(s["maxStamina"]);
+  }
+
+  auto& inv = engine.GetInventory();
+  inv.Clear();
+  if (j.contains("inventory")) {
+    for (auto it = j["inventory"].begin(); it != j["inventory"].end(); ++it) {
+      inv.AddItem(it.key(), it.value());
+    }
+  }
+
   std::cout << "[SaveManager] Loaded save from " << path << "\n";
   return true;
 }

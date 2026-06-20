@@ -21,7 +21,20 @@ Engine::Engine()
   : initialized_(false),
     name_("ModernGothicEngine"),
     window_(nullptr),
-    timeSeconds_(0.0f) {}
+    timeSeconds_(0.0f) {
+  // Always create managers so Engine can be used for logic testing without Initialize()
+  statsManager_ = std::make_unique<StatsManager>();
+  skillManager_ = std::make_unique<SkillManager>();
+  inventory_ = std::make_unique<Inventory>();
+  craftingManager_ = std::make_unique<CraftingManager>();
+  wantedManager_ = std::make_unique<WantedManager>();
+  ritualManager_ = std::make_unique<RitualManager>();
+  enemyManager_ = std::make_unique<EnemyManager>();
+  interactionManager_ = std::make_unique<InteractionManager>();
+  characterController_ = std::make_unique<CharacterController>();
+  camera_ = std::make_unique<Camera>();
+  worldStreamer_ = std::make_unique<WorldStreamer>();
+}
 
 Engine::~Engine() {
   if (initialized_) {
@@ -42,19 +55,6 @@ bool Engine::Initialize() {
     glfwTerminate();
     return false;
   }
-
-  camera_ = std::make_unique<Camera>();
-  worldStreamer_ = std::make_unique<WorldStreamer>();
-  characterController_ = std::make_unique<CharacterController>();
-
-  statsManager_ = std::make_unique<StatsManager>();
-  skillManager_ = std::make_unique<SkillManager>();
-  inventory_ = std::make_unique<Inventory>();
-  craftingManager_ = std::make_unique<CraftingManager>();
-  wantedManager_ = std::make_unique<WantedManager>();
-  ritualManager_ = std::make_unique<RitualManager>();
-  enemyManager_ = std::make_unique<EnemyManager>();
-  interactionManager_ = std::make_unique<InteractionManager>();
 
   // Load data
   if (!skillManager_->LoadFromJSON("docs/skills/FullSkillTrees.json")) {
@@ -110,17 +110,6 @@ void Engine::Shutdown() {
   if (!initialized_) return;
 
   renderer_.reset();
-  camera_.reset();
-  worldStreamer_.reset();
-  characterController_.reset();
-  statsManager_.reset();
-  skillManager_.reset();
-  inventory_.reset();
-  craftingManager_.reset();
-  wantedManager_.reset();
-  ritualManager_.reset();
-  enemyManager_.reset();
-  interactionManager_.reset();
 
   if (window_) {
     glfwDestroyWindow(window_);

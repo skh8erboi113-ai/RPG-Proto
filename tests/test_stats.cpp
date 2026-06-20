@@ -52,10 +52,9 @@ TEST(StatsTest, Alignment) {
   engine::StatsManager stats;
   stats.AdjustAlignment(0.5f);
   EXPECT_FLOAT_EQ(stats.GetAlignment(), 0.5f);
+  EXPECT_EQ(stats.GetAlignmentType(), engine::AlignmentType::ANGELIC);
   stats.AdjustAlignment(-1.5f);
   EXPECT_FLOAT_EQ(stats.GetAlignment(), -1.0f);
-  EXPECT_EQ(stats.GetAlignmentType(), engine::AlignmentType::ANGELIC);
-  stats.AdjustAlignment(-2.0f);
   EXPECT_EQ(stats.GetAlignmentType(), engine::AlignmentType::DEMONIC);
 }
 
