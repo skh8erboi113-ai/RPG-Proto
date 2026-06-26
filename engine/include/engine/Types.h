@@ -21,7 +21,7 @@ using f64 = double;
 struct alignas(16) Vec2 {
   f32 x, y;
   Vec2() : x(0), y(0) {}
-  Vec2(f32 x, f32 y) : x(x), y(y) {}
+  Vec2(f32 px, f32 py) : x(px), y(py) {}
   Vec2 operator+(const Vec2& v) const { return Vec2(x + v.x, y + v.y); }
   Vec2 operator-(const Vec2& v) const { return Vec2(x - v.x, y - v.y); }
   Vec2 operator*(f32 s) const { return Vec2(x * s, y * s); }
@@ -32,7 +32,7 @@ struct alignas(16) Vec2 {
 struct alignas(16) Vec3 {
   f32 x, y, z;
   Vec3() : x(0), y(0), z(0) {}
-  Vec3(f32 x, f32 y, f32 z) : x(x), y(y), z(z) {}
+  Vec3(f32 px, f32 py, f32 pz) : x(px), y(py), z(pz) {}
   Vec3 operator+(const Vec3& v) const { return Vec3(x + v.x, y + v.y, z + v.z); }
   Vec3 operator-(const Vec3& v) const { return Vec3(x - v.x, y - v.y, z - v.z); }
   Vec3 operator*(f32 s) const { return Vec3(x * s, y * s, z * s); }
@@ -44,8 +44,8 @@ struct alignas(16) Vec3 {
 struct alignas(16) Vec4 {
   f32 x, y, z, w;
   Vec4() : x(0), y(0), z(0), w(1) {}
-  Vec4(f32 x, f32 y, f32 z, f32 w) : x(x), y(y), z(z), w(w) {}
-  Vec4(const Vec3& v, f32 w) : x(v.x), y(v.y), z(v.z), w(w) {}
+  Vec4(f32 px, f32 py, f32 pz, f32 pw) : x(px), y(py), z(pz), w(pw) {}
+  Vec4(const Vec3& v, f32 pw) : x(v.x), y(v.y), z(v.z), w(pw) {}
   Vec4 operator+(const Vec4& v) const { return Vec4(x + v.x, y + v.y, z + v.z, w + v.w); }
   Vec4 operator-(const Vec4& v) const { return Vec4(x - v.x, y - v.y, z - v.z, w - v.w); }
   Vec4 operator*(f32 s) const { return Vec4(x * s, y * s, z * s, w * s); }
