@@ -7,14 +7,14 @@ Run locally: python3 vertical_slice/scripts/generate_asset_metadata.py
 
 import json
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 
 IMPORT_DIR = Path(__file__).resolve().parents[1] / "imported_assets"
 OUT_FILE = Path(__file__).resolve().parents[1] / "asset_metadata.json"
 
 def gather_assets():
     metadata = {
-        "generated_at": datetime.utcnow().isoformat() + "Z",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
         "assets": []
     }
 
@@ -33,7 +33,7 @@ def gather_assets():
                 "filename": item.name,
                 "category": category,
                 "size_bytes": item.stat().st_size,
-                "relative_path": str(item.relative_to(Path(__file__).resolve().parents[2])),
+                "relative_path": str(item.relative_to(Path(__file__).resolve().parents[1])),
             }
             metadata["assets"].append(entry)
 
@@ -48,4 +48,3 @@ def write_metadata(metadata):
 if __name__ == "__main__":
     meta = gather_assets()
     write_metadata(meta)
-  
