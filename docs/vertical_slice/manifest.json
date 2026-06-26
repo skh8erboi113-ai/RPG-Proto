@@ -1,4 +1,6 @@
 {
+  "_superseded_by": "../../manifest.json",
+  "_note": "This file predates the flattening of the vertical_slice/ subfolder into the repo root and its paths (vertical_slice/assets/, vertical_slice/scripts/...) no longer match the current layout. See manifest.json at the repo root for the up-to-date version. Kept here for historical reference only.",
   "version": "1.0",
   "name": "Ashbourne Vertical Slice",
   "description": "Manifest describing the vertical slice package, assets, scripts, and build entry points.",
