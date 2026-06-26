@@ -8,10 +8,11 @@ namespace engine {
 
 void HUD::Draw(Engine& engine) {
   auto& stats = engine.GetStats();
-  auto& wanted = engine.GetWanted();
 
   // For prototype, we'll log to console until ImGui is fully ready
   // (In a real build, we'd use ImGui::Begin/End here)
+  // TODO: surface wanted-level info here once HUD has a notion of the
+  // player's current city (see WantedManager::GetWantedLevel).
   static float timer = 0;
   timer += 0.016f;
   if (timer > 1.0f) {
